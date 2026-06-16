@@ -336,6 +336,14 @@ prompt_pure_async_vcs_info() {
 	info[top]=$vcs_info_msg_1_
 	info[action]=$vcs_info_msg_2_
 
+	# Do not report git context if not inside an actual work tree (e.g. a bare
+	# repo container directory that has a .git file pointing to the bare repo).
+	if [[ $(command git rev-parse --is-inside-work-tree 2>/dev/null) != true ]]; then
+		info[branch]=
+		info[top]=
+		info[action]=
+	fi
+
 	print -r - ${(@kvq)info}
 }
 
